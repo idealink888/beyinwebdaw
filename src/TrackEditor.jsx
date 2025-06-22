@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 const NUM_STEPS = 16;
 
+// Correct basePath for Vite (production = GitHub Pages repo subpath, else empty for local)
+const basePath = import.meta.env.MODE === 'production' ? '/beyinwebdaw' : '';
+
 const TrackEditor = () => {
   const [steps, setSteps] = useState({
     kick: new Array(NUM_STEPS).fill(false),
@@ -10,7 +13,7 @@ const TrackEditor = () => {
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [samplesLoaded, setSamplesLoaded] = useState(false); // <-- new loading state
+  const [samplesLoaded, setSamplesLoaded] = useState(false);
 
   const audioCtxRef = useRef(null);
   const samples = useRef({});
@@ -28,11 +31,11 @@ const TrackEditor = () => {
 
     const loadAllSamples = async () => {
       await Promise.all([
-        loadSample("kick", "/kick.mp3"),
-        loadSample("snare", "/snare.mp3"),
-        loadSample("synth", "/synth.mp3"),
+        loadSample("kick", `${basePath}/kick.mp3`),
+        loadSample("snare", `${basePath}/snare.mp3`),
+        loadSample("synth", `${basePath}/synth.mp3`),
       ]);
-      setSamplesLoaded(true); // <-- mark samples loaded
+      setSamplesLoaded(true);
     };
 
     loadAllSamples();

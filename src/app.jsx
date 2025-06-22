@@ -51,13 +51,22 @@ export default function App() {
   return (
     <div style={{ padding: 20 }}>
       <h1>🎛️ 北隱 Web DAW</h1>
+
+      {/* Upload component handles user audio input */}
       <Upload onAudioLoaded={handleAudioLoaded} onVolumeChange={handleVolumeChange} />
+
+      {/* Playback controls */}
       <div style={{ marginTop: 20 }}>
-        <button onClick={startPlayback} style={{ marginRight: 10 }}>▶ Play</button>
-        <button onClick={pausePlayback} style={{ marginRight: 10 }}>⏸ Pause</button>
+        <button onClick={startPlayback} style={{ marginRight: 10 }}>
+          ▶ Play
+        </button>
+        <button onClick={pausePlayback} style={{ marginRight: 10 }}>
+          ⏸ Pause
+        </button>
         <button onClick={stopPlayback}>⏹ Stop</button>
       </div>
 
+      {/* Sequencer UI */}
       <Sequencer ref={sequencerRef} />
     </div>
   );

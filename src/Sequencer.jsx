@@ -4,10 +4,13 @@ const stepsCount = 8;
 const bpm = 120;
 const intervalMs = (60 / bpm) * 1000 / 2; // 8th notes
 
+// Use PUBLIC_URL as base path, fallback to empty string for local dev
+const basePath = process.env.PUBLIC_URL || '';
+
 const instruments = [
-  { name: 'Kick', src: '/kick.mp3' },
-  { name: 'Snare', src: '/snare.mp3' },
-  { name: 'Synth', src: '/synth.mp3' },
+  { name: 'Kick', src: `${basePath}/kick.mp3` },
+  { name: 'Snare', src: `${basePath}/snare.mp3` },
+  { name: 'Synth', src: `${basePath}/synth.mp3` },
 ];
 
 const Sequencer = forwardRef((props, ref) => {
@@ -16,6 +19,7 @@ const Sequencer = forwardRef((props, ref) => {
   const [currentStep, setCurrentStep] = useState(-1);
   const intervalRef = useRef(null);
 
+  // Initialize Audio objects with dynamic src paths
   const audioRefs = useRef(instruments.map(({src}) => new Audio(src)));
 
   const playSound = (instIdx) => {

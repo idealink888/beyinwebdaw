@@ -5,9 +5,9 @@ const bpm = 120;
 const intervalMs = (60 / bpm) * 1000 / 2; // 8th notes
 
 const instruments = [
-  { name: "Kick", src: "/kick.mp3" },
-  { name: "Snare", src: "/snare.mp3" },
-  { name: "Synth", src: "/synth.mp3" },
+  { name: "Kick", src: "/beyinwebdaw/kick.mp3" },
+  { name: "Snare", src: "/beyinwebdaw/snare.mp3" },
+  { name: "Synth", src: "/beyinwebdaw/synth.mp3" },
 ];
 
 export default function Sequencer() {
