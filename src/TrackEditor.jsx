@@ -10,6 +10,8 @@ const TrackEditor = () => {
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [samplesLoaded, setSamplesLoaded] = useState(false); // <-- new loading state
+
   const audioCtxRef = useRef(null);
   const samples = useRef({});
   const currentStep = useRef(0);
@@ -23,21 +25,37 @@ const TrackEditor = () => {
 
   useEffect(() => {
     audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    loadSample("kick", "/samples/kick.mp3");
-    loadSample("snare", "/samples/snare.mp3");
-    loadSample("synth", "/samples/synth.mp3");
+
+    const loadAllSamples = async () => {
+      await Promise.all([
+        loadSample("kick", "/kick.mp3"),
+        loadSample("snare", "/snare.mp3"),
+        loadSample("synth", "/synth.mp3"),
+      ]);
+      setSamplesLoaded(true); // <-- mark samples loaded
+    };
+
+    loadAllSamples();
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId.current);
   }, []);
 
   const toggleStep = (track, index) => {
-    setSteps(prev => ({
+    setSteps((prev) => ({
       ...prev,
       [track]: prev[track].map((on, i) => (i === index ? !on : on)),
     }));
   };
 
   const playSample = (name) => {
+    const buffer = samples.current[name];
+    if (!buffer) {
+      console.warn(`Sample ${name} not loaded yet.`);
+      return;
+    }
     const source = audioCtxRef.current.createBufferSource();
-    source.buffer = samples.current[name];
+    source.buffer = buffer;
     source.connect(audioCtxRef.current.destination);
     source.start();
   };
@@ -50,12 +68,12 @@ const TrackEditor = () => {
         }
       });
       currentStep.current = (currentStep.current + 1) % NUM_STEPS;
-    }, 150); // adjust tempo (ms per step)
+    }, 150);
   };
 
   const startPlayback = () => {
     if (!audioCtxRef.current) return;
-    audioCtxRef.current.resume(); 
+    audioCtxRef.current.resume();
     currentStep.current = 0;
     setIsPlaying(true);
     playLoop();
@@ -66,8 +84,9 @@ const TrackEditor = () => {
     setIsPlaying(false);
   };
 
-
-
+  if (!samplesLoaded) {
+    return <div className="p-6 text-white">Loading samples… 🎧</div>;
+  }
 
   return (
     <div className="p-6 text-white">
@@ -89,9 +108,12 @@ const TrackEditor = () => {
         </div>
       ))}
 
-  <button onClick={() => playSample("kick")} className="mt-4 bg-blue-600 px-4 py-2 rounded">
-    🔊 Test Kick Sound
-  </button>
+      <button
+        onClick={() => playSample("kick")}
+        className="mt-4 bg-blue-600 px-4 py-2 rounded"
+      >
+        🔊 Test Kick Sound
+      </button>
 
       <div className="mt-6 flex gap-4">
         {!isPlaying ? (
