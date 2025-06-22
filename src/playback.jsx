@@ -4,10 +4,12 @@ const stepsCount = 8;
 const bpm = 120;
 const intervalMs = (60 / bpm) * 1000 / 2; // 8th notes
 
+const base = import.meta.env.BASE_URL;
+
 const instruments = [
-  { name: "Kick", src: "/beiyinwebdaw/kick.mp3" },
-  { name: "Snare", src: "/beiyinwebdaw/snare.mp3" },
-  { name: "Synth", src: "/beiyinwebdaw/synth.mp3" },
+  { name: "Kick", src: `${base}kick.mp3` },
+  { name: "Snare", src: `${base}snare.mp3` },
+  { name: "Synth", src: `${base}synth.mp3` },
 ];
 
 export default function Sequencer() {
